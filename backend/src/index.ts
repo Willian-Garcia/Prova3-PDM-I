@@ -53,5 +53,5 @@ app.use(routes);
 
 // Inicializa o servidor na porta especificada
 app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
+  console.log(`Servidor rodando em http://192.168.18.46:${PORT}`);
 });

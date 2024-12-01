@@ -22,7 +22,7 @@ class BooksController {
 
   static async getAllBooks(req: Request, res: Response): Promise<Response> {
     try {
-      const books = await Book.find();
+      const books = await Book.find().sort({ year: -1 });
       return res.status(200).json(books);
     } catch (error) {
       console.error(error);
