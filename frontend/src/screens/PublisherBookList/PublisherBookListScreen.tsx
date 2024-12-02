@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { FlatList, TouchableOpacity, View, Text } from "react-native";
+import { FlatList, View, Text } from "react-native";
 import styles from "./styles";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../types/rootStack";
@@ -7,36 +7,30 @@ import { BookContext } from "../../contexts/BookListContext";
 import { IBooks } from "src/types/IBooks";
 
 interface Props
-  extends NativeStackScreenProps<RootStackParamList, "BookListScreen"> {}
+  extends NativeStackScreenProps<RootStackParamList, "PublisherBookListScreen"> {}
 
-  const BookListScreen: React.FC<Props> = ({ navigation }) => {
+  const PublisherBookListScreen: React.FC<Props> = ({ route }) => {
     const context = useContext(BookContext);
   
     if (!context) {
-      throw new Error("BookListScreen deve ser usado dentro de um BookProvider.");
+      throw new Error(
+        "PublisherBookListScreen deve ser usado dentro de um BookProvider."
+      );
     }
   
-    const { books, loadBooks } = context;
+    const { booksByPublisher, loadBooksByPublisher } = context;
+    const { publisher } = route.params;
   
     useEffect(() => {
-      loadBooks();
-    }, [loadBooks]);
+      loadBooksByPublisher(publisher);
+    }, [loadBooksByPublisher, publisher]);
   
     const renderBook = ({ item }: { item: IBooks }) => (
       <View style={styles.bookContainer}>
         <View style={styles.bookDetails}>
           <Text style={styles.bookTextTitle}>{item.title}</Text>
-          <Text style={styles.bookText}>{item.course}</Text>
           <Text style={styles.bookText}>{item.author}</Text>
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("PublisherBookListScreen", {
-                publisher: item.publisher,
-              })
-            }
-          >
-            <Text style={styles.bookText}>{item.publisher}</Text>
-          </TouchableOpacity>
+          <Text style={styles.bookText}>{item.publisher}</Text>
           <Text style={styles.bookText}>{item.year}</Text>
         </View>
       </View>
@@ -45,7 +39,7 @@ interface Props
     return (
       <View style={styles.container}>
         <FlatList
-          data={books}
+          data={booksByPublisher}
           keyExtractor={(item) =>
             item._id ? item._id.toString() : Math.random().toString()
           }
@@ -55,4 +49,4 @@ interface Props
     );
   };
   
-  export default BookListScreen;
+  export default PublisherBookListScreen;

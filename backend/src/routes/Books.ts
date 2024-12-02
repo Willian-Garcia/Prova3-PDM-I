@@ -11,5 +11,6 @@ router.get("/total-disciplines", BooksController.getTotalDisciplines);
 router.get("/total-books", BooksController.getTotalBooks);
 router.get("/oldest", BooksController.getOldestBook);
 router.get("/newest", BooksController.getNewestBook);
+router.get("/publisher/:publisher", BooksController.getBooksByPublisher);
 
 export default router;

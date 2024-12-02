@@ -2,7 +2,7 @@ import { BACKEND_URL } from "@env";
 import axios, { AxiosInstance } from "axios";
 
 const api: AxiosInstance = axios.create({
-  baseURL: BACKEND_URL, // Pegando do .env
+  baseURL: BACKEND_URL,
   headers: {
     "Content-Type": "application/json",
   },

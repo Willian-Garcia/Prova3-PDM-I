@@ -40,3 +40,11 @@ export const getNewestBook = async () => {
   const response = await api.get("/newest");
   return response.data;
 };
+
+export const getBooksByPublisher = async (publisher: string) => {
+  if (!publisher) {
+    throw new Error("O nome da editora é obrigatório.");
+  }
+  const response = await api.get(`/publisher/${publisher}`);
+  return response.data;
+};

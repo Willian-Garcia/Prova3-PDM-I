@@ -124,6 +124,42 @@ class BooksController {
       return res.status(500).json({ message: "Erro ao buscar o livro mais novo." });
     }
   }
+
+  static async getBooksByPublisher(req: Request, res: Response): Promise<Response> {
+    try {
+      const { publisher } = req.params;
+  
+      if (!publisher) {
+        return res.status(400).json({ message: "O nome da editora é obrigatório." });
+      }
+  
+      // Usar expressão regular para ignorar maiúsculas/minúsculas
+      const books = await Book.find({ publisher: { $regex: new RegExp(`^${publisher}$`, "i") } })
+        .select("title author publisher year")
+        .lean();
+  
+      // Remover duplicatas com base no título
+      const uniqueBooks = books.reduce((acc: any[], book) => {
+        if (!acc.some((b) => b.title === book.title)) {
+          acc.push(book);
+        }
+        return acc;
+      }, []);
+  
+      if (uniqueBooks.length === 0) {
+        return res.status(404).json({ message: "Nenhum livro encontrado para esta editora." });
+      }
+  
+      // Ordenar os livros pelo ano de forma decrescente (mais recente primeiro)
+      uniqueBooks.sort((a, b) => b.year - a.year);
+  
+      return res.status(200).json(uniqueBooks);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Erro ao buscar livros pela editora." });
+    }
+  }
+ 
 }
 
 export default BooksController;

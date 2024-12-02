@@ -8,6 +8,7 @@ import {
   getTotalBooks,
   getOldestBook,
   getNewestBook,
+  getBooksByPublisher,
 } from "../services/BookListService";
 import { IBooks } from "../types/IBooks";
 
@@ -17,7 +18,9 @@ interface BookContextData {
   totalBooks: number;
   oldestBook: { title: string; year: number } | null;
   newestBook: { title: string; year: number } | null;
+  booksByPublisher: IBooks[];
   loadBooks: () => Promise<void>;
+  loadBooksByPublisher: (publisher: string) => Promise<void>;
   addBook: (book: Omit<IBooks, "id">) => Promise<void>;
   deleteBook: (id: string) => Promise<void>;
   updateBook: (book: IBooks) => Promise<void>;
@@ -37,6 +40,7 @@ export const BookProvider = ({ children }: BookProviderProps) => {
   const [totalBooks, setTotalBooks] = useState<number>(0);
   const [oldestBook, setOldestBook] = useState<{ title: string; year: number } | null>(null);
   const [newestBook, setNewestBook] = useState<{ title: string; year: number } | null>(null);
+  const [booksByPublisher, setBooksByPublisher] = useState<IBooks[]>([]);
 
   const loadBooks = async () => {
     try {
@@ -53,6 +57,15 @@ export const BookProvider = ({ children }: BookProviderProps) => {
       setNewestBook(newest);
     } catch (error) {
       console.error("Erro ao carregar os livros:", error);
+    }
+  };
+
+  const loadBooksByPublisher = async (publisher: string) => {
+    try {
+      const books = await getBooksByPublisher(publisher);
+      setBooksByPublisher(books);
+    } catch (error) {
+      console.error("Erro ao carregar livros da editora:", error);
     }
   };
 
@@ -97,7 +110,9 @@ export const BookProvider = ({ children }: BookProviderProps) => {
         totalBooks,
         oldestBook,
         newestBook,
+        booksByPublisher,
         loadBooks,
+        loadBooksByPublisher,
         addBook,
         deleteBook,
         updateBook,
