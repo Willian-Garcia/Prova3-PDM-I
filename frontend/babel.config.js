@@ -6,15 +6,11 @@ module.exports = {
       {
         moduleName: "@env",
         path: ".env",
-        blocklist: null,
-        allowlist: null,
+        blacklist: null,
+        whitelist: null,
         safe: false,
         allowUndefined: true,
-        verbose: false,
       },
     ],
-    ["@babel/plugin-transform-private-methods", { loose: true }], // Adicione o modo 'loose'
-    ["@babel/plugin-transform-class-properties", { loose: true }], // Adicione o modo 'loose'
-    ["@babel/plugin-transform-private-property-in-object", { loose: true }], // Adicione o modo 'loose'
   ],
 };
